@@ -297,8 +297,11 @@ function renderSystemCards() {
             card.addEventListener("mouseenter", startVideo);
             card.addEventListener("mouseleave", stopVideo);
             
-            // Mobile tap-to-play toggle (swipes/scrolls do not trigger clicks, preventing network choke)
-            mediaContainer.addEventListener("click", (e) => {
+            // Mobile tap-to-play toggle on the ENTIRE CARD (swipes/scrolls do not trigger clicks, preventing network choke)
+            card.addEventListener("click", (e) => {
+                // Ignore clicks on action buttons
+                if (e.target.closest(".card-actions")) return;
+                
                 e.stopPropagation();
                 if (!videoEl.getAttribute("src")) {
                     videoEl.src = videoEl.getAttribute("data-src");
