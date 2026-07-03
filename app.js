@@ -281,11 +281,15 @@ function renderSystemCards() {
             const mediaContainer = card.querySelector(".card-media");
             
             const startVideo = () => {
+                mediaContainer.classList.add("playing");
                 if (!videoEl.getAttribute("src")) {
                     videoEl.src = videoEl.getAttribute("data-src");
+                    videoEl.addEventListener("loadedmetadata", () => {
+                        videoEl.play().catch(() => {});
+                    }, { once: true });
+                } else {
+                    videoEl.play().catch(() => {});
                 }
-                videoEl.play().catch(() => {});
-                mediaContainer.classList.add("playing");
             };
             
             const stopVideo = () => {
@@ -304,14 +308,19 @@ function renderSystemCards() {
                 
                 e.stopPropagation();
                 if (!videoEl.getAttribute("src")) {
-                    videoEl.src = videoEl.getAttribute("data-src");
-                }
-                if (videoEl.paused) {
-                    videoEl.play().catch(() => {});
                     mediaContainer.classList.add("playing");
+                    videoEl.src = videoEl.getAttribute("data-src");
+                    videoEl.addEventListener("loadedmetadata", () => {
+                        videoEl.play().catch(() => {});
+                    }, { once: true });
                 } else {
-                    videoEl.pause();
-                    mediaContainer.classList.remove("playing");
+                    if (videoEl.paused) {
+                        videoEl.play().catch(() => {});
+                        mediaContainer.classList.add("playing");
+                    } else {
+                        videoEl.pause();
+                        mediaContainer.classList.remove("playing");
+                    }
                 }
             });
         }
