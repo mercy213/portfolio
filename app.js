@@ -132,17 +132,23 @@ function updateCircuitPath() {
     const checkpoints = [
         { y: getAbsoluteY("#hero"), offset: 0.15 },
         
-        // Systems section left margin run (clears cards)
+        // Systems section left margin motherboard trace wiggles
         { y: getAbsoluteY("#systems") - 50, offset: 0.08 },
+        { y: getAbsoluteY("#systems") + 250, offset: 0.05 },
+        { y: getAbsoluteY("#systems") + 550, offset: 0.08 },
+        { y: getAbsoluteY("#systems") + 850, offset: 0.05 },
         { y: getAbsoluteY("#playground") - 200, offset: 0.08 },
         
-        // Cross to right margin in the gap before Sandbox IDE (clears IDE)
+        // Cross to right margin in the gap before Sandbox IDE
         { y: getAbsoluteY("#playground") - 50, offset: 0.92 },
+        { y: getAbsoluteY("#playground") + 150, offset: 0.95 },
+        { y: getAbsoluteY("#playground") + 350, offset: 0.91 },
         { y: getAbsoluteY("#playground") + 550, offset: 0.92 },
         
-        // Cross back to left margin in the gap before Tech (clears stack cards)
+        // Cross back to left margin in the gap before Tech
         { y: getAbsoluteY("#tech") - 100, offset: 0.08 },
-        { y: getAbsoluteY("#tech") + 350, offset: 0.08 },
+        { y: getAbsoluteY("#tech") + 150, offset: 0.05 },
+        { y: getAbsoluteY("#tech") + 300, offset: 0.08 },
         
         // Cross to right margin in the gap before Contact
         { y: getAbsoluteY("#contact") - 80, offset: 0.85 },
@@ -182,20 +188,30 @@ function updateCircuitPath() {
     animateWire();
 }
 
+let currentPct = 0;
+let targetPct = 0;
+
 function animateWire() {
-    const path = document.getElementById("circuit-wire");
-    if (!path) return;
-    
-    const pathLength = path.getTotalLength();
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    
-    // Scroll percentage
-    const pct = Math.min(Math.max(scrollTop / docHeight, 0), 1);
-    
-    // Animate stroke drawing
-    path.style.strokeDashoffset = pathLength - (pathLength * pct);
+    targetPct = Math.min(Math.max(scrollTop / docHeight, 0), 1);
 }
+
+function smoothDrawLoop() {
+    // Easing interpolation (LERP) for 60fps smooth scrolling wire effect
+    currentPct += (targetPct - currentPct) * 0.085;
+    
+    const path = document.getElementById("circuit-wire");
+    if (path) {
+        const pathLength = path.getTotalLength();
+        path.style.strokeDashoffset = pathLength - (pathLength * currentPct);
+    }
+    
+    requestAnimationFrame(smoothDrawLoop);
+}
+
+// Initialize smooth loop
+smoothDrawLoop();
 
 /* ==========================================================================
    RENDER SYSTEM CARDS
