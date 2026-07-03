@@ -245,10 +245,11 @@ function renderSystemCards() {
         card.className = "system-card";
         card.setAttribute("data-category", sys.category);
         
-        // Fallback checks for images vs videos (use lazy data-src to prevent choking mobile bandwidth)
+        // Static src + preload="none" prevents loading video bytes on load while enabling instant 1-tap playback
         const isVideo = sys.video;
         const mediaTag = isVideo 
-            ? `<video class="card-video" data-src="${sys.video}" muted loop playsinline preload="none" poster="${sys.image || './Asessts/chassis/image.png'}"></video>` 
+            ? `<video class="card-video" src="${sys.video}" muted loop playsinline preload="none" poster="${sys.image || './Asessts/chassis/image.png'}"></video>
+               <button class="btn-fullscreen" title="Maximize Showcase"><i class="fa-solid fa-expand"></i></button>` 
             : `<img class="card-img" src="${sys.image || './Asessts/chassis/image.png'}" alt="${sys.title}">`;
             
         const descHtml = sys.description ? `<p class="card-desc">${sys.description}</p>` : "";
@@ -275,21 +276,14 @@ function renderSystemCards() {
         
         container.appendChild(card);
         
-        // Lazy load video stream on demand (hover on desktop, click/tap on mobile)
+        // Autoplay/pause triggers (static src with preload="none" ensures instant 1-tap execution)
         if (isVideo) {
             const videoEl = card.querySelector(".card-video");
             const mediaContainer = card.querySelector(".card-media");
             
             const startVideo = () => {
                 mediaContainer.classList.add("playing");
-                if (!videoEl.getAttribute("src")) {
-                    videoEl.src = videoEl.getAttribute("data-src");
-                    videoEl.addEventListener("loadedmetadata", () => {
-                        videoEl.play().catch(() => {});
-                    }, { once: true });
-                } else {
-                    videoEl.play().catch(() => {});
-                }
+                videoEl.play().catch(() => {});
             };
             
             const stopVideo = () => {
@@ -303,26 +297,47 @@ function renderSystemCards() {
             
             // Mobile tap-to-play toggle on the ENTIRE CARD (swipes/scrolls do not trigger clicks, preventing network choke)
             card.addEventListener("click", (e) => {
-                // Ignore clicks on action buttons
-                if (e.target.closest(".card-actions")) return;
+                // Ignore clicks on action buttons or the fullscreen button
+                if (e.target.closest(".card-actions") || e.target.closest(".btn-fullscreen")) return;
                 
                 e.stopPropagation();
-                if (!videoEl.getAttribute("src")) {
+                if (videoEl.paused) {
+                    videoEl.play().catch(() => {});
                     mediaContainer.classList.add("playing");
-                    videoEl.src = videoEl.getAttribute("data-src");
-                    videoEl.addEventListener("loadedmetadata", () => {
-                        videoEl.play().catch(() => {});
-                    }, { once: true });
                 } else {
-                    if (videoEl.paused) {
-                        videoEl.play().catch(() => {});
-                        mediaContainer.classList.add("playing");
-                    } else {
-                        videoEl.pause();
-                        mediaContainer.classList.remove("playing");
-                    }
+                    videoEl.pause();
+                    mediaContainer.classList.remove("playing");
                 }
             });
+            
+            // Fullscreen button click handler
+            const fullscreenBtn = card.querySelector(".btn-fullscreen");
+            fullscreenBtn.addEventListener("click", (e) => {
+                e.stopPropagation(); // Avoid triggering card click play/pause toggle
+                
+                // Unmute the video on fullscreen entry for a rich showcase experience
+                videoEl.muted = false;
+                
+                if (videoEl.requestFullscreen) {
+                    videoEl.requestFullscreen();
+                } else if (videoEl.webkitEnterFullscreen) {
+                    videoEl.webkitEnterFullscreen(); // iOS Safari specific
+                } else if (videoEl.msRequestFullscreen) {
+                    videoEl.msRequestFullscreen();
+                }
+                
+                videoEl.play().catch(() => {});
+                mediaContainer.classList.add("playing");
+            });
+            
+            // Reset mute state when exiting fullscreen
+            const onFullscreenChange = () => {
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    videoEl.muted = true;
+                }
+            };
+            document.addEventListener("fullscreenchange", onFullscreenChange);
+            document.addEventListener("webkitfullscreenchange", onFullscreenChange);
         }
     });
 
