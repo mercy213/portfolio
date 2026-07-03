@@ -272,9 +272,10 @@ function renderSystemCards() {
         
         container.appendChild(card);
         
-        // Lazy load video stream on demand (hover on desktop, touch on mobile)
+        // Lazy load video stream on demand (hover on desktop, click/tap on mobile)
         if (isVideo) {
             const videoEl = card.querySelector(".card-video");
+            const mediaContainer = card.querySelector(".card-media");
             
             const startVideo = () => {
                 if (!videoEl.src) {
@@ -282,17 +283,33 @@ function renderSystemCards() {
                     videoEl.load();
                 }
                 videoEl.play().catch(() => {});
+                mediaContainer.classList.add("playing");
             };
             
             const stopVideo = () => {
                 videoEl.pause();
+                mediaContainer.classList.remove("playing");
             };
             
+            // Desktop hover play
             card.addEventListener("mouseenter", startVideo);
             card.addEventListener("mouseleave", stopVideo);
             
-            // Mobile touch start support
-            card.addEventListener("touchstart", startVideo, { passive: true });
+            // Mobile tap-to-play toggle (swipes/scrolls do not trigger clicks, preventing network choke)
+            mediaContainer.addEventListener("click", (e) => {
+                e.stopPropagation();
+                if (!videoEl.src) {
+                    videoEl.src = videoEl.getAttribute("data-src");
+                    videoEl.load();
+                }
+                if (videoEl.paused) {
+                    videoEl.play().catch(() => {});
+                    mediaContainer.classList.add("playing");
+                } else {
+                    videoEl.pause();
+                    mediaContainer.classList.remove("playing");
+                }
+            });
         }
     });
 
