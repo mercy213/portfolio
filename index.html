@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ariel | Systems Architect & Portfolio</title>
+    
+    <!-- Meta Tags for SEO -->
+    <meta name="description" content="Interactive developer portfolio showcasing Roblox systems engineering, physics engines, database architectures, and custom gameplay code.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="style.css?v=1.0.5">
+</head>
+<body>
+
+    <!-- Ambient Grid & Particle Canvas Background -->
+    <div class="grid-overlay"></div>
+    <div class="ambient-glows">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+    </div>
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Interactive SVG Scroll Canvas -->
+    <svg class="scroll-canvas" width="100%" height="100%">
+        <defs>
+            <linearGradient id="line-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#00f2fe" />
+                <stop offset="50%" stop-color="#7f00ff" />
+                <stop offset="100%" stop-color="#ff007f" />
+            </linearGradient>
+            <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="8" result="blur" />
+                <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+        </defs>
+        <!-- The path will be dynamically generated and drawn in JS -->
+        <path id="circuit-wire" d="" fill="none" stroke="url(#line-gradient)" stroke-width="4" filter="url(#neon-glow)" />
+    </svg>
+
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="logo">
+            <span class="logo-icon"><i class="fa-solid fa-microchip"></i></span>
+            <span class="logo-text">ARIEL<span class="pulse">_</span></span>
+        </div>
+        <nav class="nav">
+            <a href="#hero" class="nav-link active">Home</a>
+            <a href="#systems" class="nav-link">Systems</a>
+            <a href="#playground" class="nav-link">IDE Sandbox</a>
+            <a href="#tech" class="nav-link">Stack</a>
+            <a href="#contact" class="nav-link contact-btn">Init Contact</a>
+        </nav>
+    </header>
+
+    <main class="main">
+
+        <!-- Hero Section -->
+        <section id="hero" class="section hero-sec">
+            <div class="hero-content">
+                <div class="system-status-tag">
+                    <span class="status-dot green"></span> SYSTEM OPERATIONAL // V1.0.4
+                </div>
+                <h1 class="hero-title">
+                    BUILDING COMPLEX <br>
+                    <span class="gradient-text">SYSTEMS & CODE</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Roblox systems architect specializing in custom game engines, transactional data store pipelines, aerodynamic physics, and spatial AI.
+                </p>
+                <div class="hero-ctas">
+                    <a href="#systems" class="btn btn-primary">
+                        Explore Systems <i class="fa-solid fa-arrow-down"></i>
+                    </a>
+                    <a href="#playground" class="btn btn-secondary">
+                        Open Sandbox <i class="fa-solid fa-terminal"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="hero-scroll-indicator">
+                <span class="mouse-icon">
+                    <span class="mouse-wheel"></span>
+                </span>
+                <span class="scroll-text">SCROLL TO INITIALIZE WIRE</span>
+            </div>
+        </section>
+
+        <!-- Systems Showcase Section -->
+        <section id="systems" class="section systems-sec">
+            <div class="section-header">
+                <span class="section-pre">PROJECT REPOSITORY</span>
+                <h2 class="section-title">Engineered Systems</h2>
+                <div class="filter-bar">
+                    <button class="filter-btn active" data-filter="all">All Systems</button>
+                    <button class="filter-btn" data-filter="Physics & Engine Architecture">Physics & Engines</button>
+                    <button class="filter-btn" data-filter="System Architectures">Architectures</button>
+                    <button class="filter-btn" data-filter="Backend Databases">Backend / Cloud</button>
+                    <button class="filter-btn" data-filter="UI/UX & Graphics">Graphics & UI</button>
+                </div>
+            </div>
+
+            <!-- The Systems Grid -->
+            <div class="systems-grid" id="systems-container">
+                <!-- Javascript will render the 13 system cards here -->
+            </div>
+        </section>
+
+        <!-- Interactive IDE & Terminal Sandbox Section -->
+        <section id="playground" class="section playground-sec">
+            <div class="section-header">
+                <span class="section-pre">INTERACTIVE CODE ENVIRONMENT</span>
+                <h2 class="section-title">IDE Source Explorer</h2>
+                <p class="section-desc">Select any code module below, inspect the Luau structure, and compile to witness its runtime simulation output.</p>
+            </div>
+
+            <!-- Mock IDE Shell -->
+            <div class="ide-wrapper">
+                <div class="ide-window">
+                    
+                    <!-- Title Bar -->
+                    <div class="ide-title-bar">
+                        <div class="window-controls">
+                            <span class="win-dot close"></span>
+                            <span class="win-dot minimize"></span>
+                            <span class="win-dot expand"></span>
+                        </div>
+                        <div class="active-file-title" id="ide-active-tab-title">PortalTeleportationService.lua</div>
+                        <div class="ide-environment-tag">Luau VM v598</div>
+                    </div>
+
+                    <!-- IDE Work Area -->
+                    <div class="ide-main">
+                        
+                        <!-- File Explorer Sidebar -->
+                        <aside class="ide-sidebar">
+                            <div class="sidebar-header">
+                                <span class="header-title"><i class="fa-solid fa-folder-open"></i> PORTOFLIO</span>
+                            </div>
+                            <div class="sidebar-folder">
+                                <div class="folder-name"><i class="fa-solid fa-folder"></i> src</div>
+                                <ul class="file-list" id="ide-file-list">
+                                    <!-- Injected via JavaScript -->
+                                </ul>
+                            </div>
+                        </aside>
+
+                        <!-- Code Display -->
+                        <div class="ide-editor-container">
+                            <div class="editor-tabs-bar" id="editor-tabs">
+                                <!-- Injected tabs -->
+                            </div>
+                            <div class="editor-content-area">
+                                <div class="line-numbers" id="line-numbers">
+                                    <!-- Dynamic line numbers -->
+                                </div>
+                                <pre class="code-pre"><code id="code-display" class="language-lua">
+                                    <!-- Dynamic syntax-highlighted code -->
+                                </code></pre>
+                            </div>
+                        </div>
+
+                        <!-- Live Visual Telemetry Feed Panel (Beside Editor) -->
+                        <div class="ide-visual-feed">
+                            <div class="feed-header">
+                                <span><i class="fa-solid fa-satellite-dish"></i> LIVE TELEMETRY</span>
+                                <span class="live-tag">LIVE</span>
+                            </div>
+                            <div class="feed-viewport">
+                                <div class="feed-fallback" id="feed-fallback">
+                                    <i class="fa-solid fa-video-slash"></i>
+                                    <span>No active feed. Run module to initialize visual telemetry.</span>
+                                </div>
+                                <video id="feed-video" class="feed-video-element" muted loop playsinline></video>
+                                <img id="feed-image" class="feed-image-element" alt="Static view">
+                            </div>
+                            <div class="feed-controls">
+                                <button class="btn btn-run" id="btn-run-code">
+                                    <i class="fa-solid fa-play"></i> RUN SYSTEM CODE
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Terminal Output Panel (Bottom) -->
+                    <div class="ide-terminal">
+                        <div class="terminal-header">
+                            <div class="terminal-tab active"><i class="fa-solid fa-terminal"></i> Console Output</div>
+                            <div class="terminal-tab"><i class="fa-solid fa-bug"></i> Problems (0)</div>
+                            <button class="clear-terminal-btn" id="btn-clear-terminal"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                        <div class="terminal-body" id="terminal-output">
+                            <div class="terminal-line system">[System] Ariel Sandbox CLI initialized. Select and run code modules to view stdout logs.</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack / Architectural Node Grid -->
+        <section id="tech" class="section tech-sec">
+            <div class="section-header">
+                <span class="section-pre">SYSTEM DESIGN INTEGRATION</span>
+                <h2 class="section-title">Technology Ecosystem</h2>
+            </div>
+            
+            <div class="tech-grid">
+                <!-- Languages Node -->
+                <div class="tech-card" id="node-languages">
+                    <div class="tech-icon-wrapper"><i class="fa-solid fa-code"></i></div>
+                    <h3 class="tech-name">Luau & OOP</h3>
+                    <p class="tech-desc">Core language for game architecture. Expert in metatables, inheritance models, strict static typecheck rules, and performance optimization.</p>
+                </div>
+                <!-- Physics Node -->
+                <div class="tech-card" id="node-physics">
+                    <div class="tech-icon-wrapper"><i class="fa-solid fa-compass-drafting"></i></div>
+                    <h3 class="tech-name">Physics & Math</h3>
+                    <p class="tech-desc">Engine maths: 3D vector transformations, spatial subdivision, Verlet integration, custom raycast chassis, and custom aerodynamics.</p>
+                </div>
+                <!-- Data Pipeline Node -->
+                <div class="tech-card" id="node-databases">
+                    <div class="tech-icon-wrapper"><i class="fa-solid fa-database"></i></div>
+                    <h3 class="tech-name">Data Pipeline</h3>
+                    <p class="tech-desc">Robust backend state persistence. Duplication defense, transactional caches, throttling retry handlers, and session lock frameworks.</p>
+                </div>
+                <!-- Networking Node -->
+                <div class="tech-card" id="node-network">
+                    <div class="tech-icon-wrapper"><i class="fa-solid fa-network-wired"></i></div>
+                    <h3 class="tech-name">High-Scale Networking</h3>
+                    <p class="tech-desc">Server-client synchronization. Client interpolation, memory-cached matchmaking lobbies, and custom spatial replication channels.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section contact-sec">
+            <div class="contact-box">
+                <div class="contact-header">
+                    <span class="circle-btn"></span>
+                    <span class="terminal-title">INITIALIZE_COMMUNICATION.EXE</span>
+                </div>
+                <div class="contact-body">
+                    <p class="prompt-line">> SYSTEM: Choose transmission channel to initialize communication socket...</p>
+                    
+                    <div class="cli-shortcuts">
+                        <a href="https://discord.com/users/1277963474731012096" target="_blank" class="cli-link-btn">
+                            <span class="cli-cmd">[1] discord_redirect</span>
+                            <span class="cli-desc">// Connect to Discord ID: 1277963474731012096</span>
+                            <i class="fa-brands fa-discord"></i>
+                        </a>
+                        <a href="https://www.roblox.com/users/311955881/profile" target="_blank" class="cli-link-btn">
+                            <span class="cli-cmd">[2] roblox_profile</span>
+                            <span class="cli-desc">// View active creations & catalog</span>
+                            <i class="fa-solid fa-gamepad"></i>
+                        </a>
+                        <a href="mailto:ariel@example.com" class="cli-link-btn">
+                            <span class="cli-cmd">[3] raw_email_telemetry</span>
+                            <span class="cli-desc">// Send SMTP data packet direct</span>
+                            <i class="fa-solid fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-bottom">
+            <span class="copyright">© 2026 Ariel</span>
+            <div class="footer-links">
+                <a href="https://www.roblox.com/users/311955881/profile" target="_blank" class="footer-social"><i class="fa-solid fa-gamepad"></i> Roblox Profile</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Dependency Scripts -->
+    <script src="data.js?v=1.0.5"></script>
+    <script src="app.js?v=1.0.5"></script>
+</body>
+</html>
