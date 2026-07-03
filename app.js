@@ -125,23 +125,34 @@ function updateCircuitPath() {
     const docHeight = document.documentElement.scrollHeight;
     const width = window.innerWidth;
     
-    // Keep the wire in the left margin to prevent it from crossing over the content
-    let d = `M ${width * 0.05} 0`;
+    // We will build a path dynamically winding across the screen, avoiding content cards
+    let d = `M ${width * 0.15} 0`;
     
-    // Checkpoints where the line flows wiggling in the left margin
+    // Checkpoints where the line flows wiggling across the screen, routing around contents
     const checkpoints = [
-        { y: getAbsoluteY("#hero"), offset: 0.05 },
-        { y: getAbsoluteY("#systems"), offset: 0.04 },
-        { y: getAbsoluteY("#playground"), offset: 0.06 },
-        { y: getAbsoluteY("#tech"), offset: 0.04 },
-        { y: getAbsoluteY("#contact"), offset: 0.05 },
-        { y: docHeight - 100, offset: 0.04 }
+        { y: getAbsoluteY("#hero"), offset: 0.15 },
+        
+        // Systems section left margin run (clears cards)
+        { y: getAbsoluteY("#systems") - 50, offset: 0.08 },
+        { y: getAbsoluteY("#playground") - 200, offset: 0.08 },
+        
+        // Cross to right margin in the gap before Sandbox IDE (clears IDE)
+        { y: getAbsoluteY("#playground") - 50, offset: 0.92 },
+        { y: getAbsoluteY("#playground") + 550, offset: 0.92 },
+        
+        // Cross back to left margin in the gap before Tech (clears stack cards)
+        { y: getAbsoluteY("#tech") - 100, offset: 0.08 },
+        { y: getAbsoluteY("#tech") + 350, offset: 0.08 },
+        
+        // Cross to right margin in the gap before Contact
+        { y: getAbsoluteY("#contact") - 80, offset: 0.85 },
+        { y: docHeight, offset: 0.50 }
     ];
     
     // Sort checkpoints chronologically down the page
     checkpoints.sort((a, b) => a.y - b.y);
     
-    let currentX = width * 0.05;
+    let currentX = width * 0.15;
     let currentY = 0;
     
     for (let i = 0; i < checkpoints.length; i++) {
