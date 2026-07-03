@@ -1341,6 +1341,7 @@ body {
     
     .hero-title {
         font-size: 2.75rem;
+        word-break: break-word;
     }
     
     .hero-scroll-indicator {
@@ -1365,6 +1366,41 @@ body {
         height: 300px;
     }
     
+    /* Code display overflow containment */
+    .editor-body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+    
+    #code-display {
+        max-width: 100%;
+        overflow-x: auto !important;
+        white-space: pre;
+    }
+    
+    /* CLI Form responsive adjustments */
+    .form-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.25rem;
+    }
+    
+    .cli-label {
+        width: auto;
+        padding-top: 0;
+    }
+    
+    .contact-actions {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .contact-actions .btn, 
+    .contact-actions .btn-discord-contact {
+        width: 100%;
+        justify-content: center;
+    }
+    
     .footer {
         padding: 2rem 1.5rem;
     }
@@ -1373,5 +1409,28 @@ body {
         flex-direction: column;
         align-items: center;
         text-align: center;
+    }
+}
+
+/* Extra small mobile screens support */
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2.25rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.95rem;
+    }
+    
+    .sec-title {
+        font-size: 1.75rem;
+    }
+    
+    .systems-container {
+        padding: 0;
+    }
+    
+    .system-card {
+        padding: 1.25rem;
     }
 }
