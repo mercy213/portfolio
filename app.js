@@ -124,12 +124,26 @@ function updateCircuitPath() {
     
     const docHeight = document.documentElement.scrollHeight;
     const width = window.innerWidth;
+    const isMobile = width < 768;
     
     // We will build a path dynamically winding across the screen, avoiding content cards
-    let d = `M ${width * 0.15} 0`;
+    let d = `M ${width * (isMobile ? 0.05 : 0.15)} 0`;
     
     // Checkpoints where the line flows wiggling across the screen, routing around contents
-    const checkpoints = [
+    const checkpoints = isMobile ? [
+        { y: getAbsoluteY("#hero"), offset: 0.05 },
+        { y: getAbsoluteY("#systems") - 50, offset: 0.04 },
+        { y: getAbsoluteY("#systems") + 250, offset: 0.06 },
+        { y: getAbsoluteY("#systems") + 550, offset: 0.04 },
+        { y: getAbsoluteY("#systems") + 850, offset: 0.06 },
+        { y: getAbsoluteY("#playground") - 200, offset: 0.04 },
+        { y: getAbsoluteY("#playground") - 50, offset: 0.05 },
+        { y: getAbsoluteY("#playground") + 550, offset: 0.04 },
+        { y: getAbsoluteY("#tech") - 100, offset: 0.05 },
+        { y: getAbsoluteY("#tech") + 300, offset: 0.04 },
+        { y: getAbsoluteY("#contact") - 80, offset: 0.06 },
+        { y: docHeight, offset: 0.05 }
+    ] : [
         { y: getAbsoluteY("#hero"), offset: 0.15 },
         
         // Systems section left margin motherboard trace wiggles
@@ -158,7 +172,7 @@ function updateCircuitPath() {
     // Sort checkpoints chronologically down the page
     checkpoints.sort((a, b) => a.y - b.y);
     
-    let currentX = width * 0.15;
+    let currentX = width * (isMobile ? 0.05 : 0.15);
     let currentY = 0;
     
     for (let i = 0; i < checkpoints.length; i++) {
@@ -228,10 +242,10 @@ function renderSystemCards() {
         card.className = "system-card";
         card.setAttribute("data-category", sys.category);
         
-        // Fallback checks for images vs videos
+        // Fallback checks for images vs videos (use lazy data-src to prevent choking mobile bandwidth)
         const isVideo = sys.video;
         const mediaTag = isVideo 
-            ? `<video class="card-video" src="${sys.video}" muted loop playsinline preload="metadata"></video>` 
+            ? `<video class="card-video" data-src="${sys.video}" muted loop playsinline preload="none" poster="${sys.image || './Asessts/chassis/image.png'}"></video>` 
             : `<img class="card-img" src="${sys.image || './Asessts/chassis/image.png'}" alt="${sys.title}">`;
             
         const descHtml = sys.description ? `<p class="card-desc">${sys.description}</p>` : "";
@@ -258,15 +272,27 @@ function renderSystemCards() {
         
         container.appendChild(card);
         
-        // Hover video autoplay triggers
+        // Lazy load video stream on demand (hover on desktop, touch on mobile)
         if (isVideo) {
             const videoEl = card.querySelector(".card-video");
-            card.addEventListener("mouseenter", () => {
+            
+            const startVideo = () => {
+                if (!videoEl.src) {
+                    videoEl.src = videoEl.getAttribute("data-src");
+                    videoEl.load();
+                }
                 videoEl.play().catch(() => {});
-            });
-            card.addEventListener("mouseleave", () => {
+            };
+            
+            const stopVideo = () => {
                 videoEl.pause();
-            });
+            };
+            
+            card.addEventListener("mouseenter", startVideo);
+            card.addEventListener("mouseleave", stopVideo);
+            
+            // Mobile touch start support
+            card.addEventListener("touchstart", startVideo, { passive: true });
         }
     });
 
