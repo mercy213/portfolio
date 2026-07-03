@@ -283,7 +283,6 @@ function renderSystemCards() {
             const startVideo = () => {
                 if (!videoEl.getAttribute("src")) {
                     videoEl.src = videoEl.getAttribute("data-src");
-                    videoEl.load();
                 }
                 videoEl.play().catch(() => {});
                 mediaContainer.classList.add("playing");
@@ -303,7 +302,6 @@ function renderSystemCards() {
                 e.stopPropagation();
                 if (!videoEl.getAttribute("src")) {
                     videoEl.src = videoEl.getAttribute("data-src");
-                    videoEl.load();
                 }
                 if (videoEl.paused) {
                     videoEl.play().catch(() => {});
