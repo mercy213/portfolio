@@ -213,7 +213,10 @@ function animateWire() {
 
 function smoothDrawLoop() {
     // Easing interpolation (LERP) for 60fps smooth scrolling wire effect
-    currentPct += (targetPct - currentPct) * 0.085;
+    // Increase catch-up speed dynamically (faster on mobile for direct response, smooth on desktop)
+    const isMobile = window.innerWidth < 768;
+    const lerpSpeed = isMobile ? 0.24 : 0.12;
+    currentPct += (targetPct - currentPct) * lerpSpeed;
     
     const path = document.getElementById("circuit-wire");
     if (path) {
