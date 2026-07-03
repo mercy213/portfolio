@@ -305,6 +305,7 @@ function renderSystemCards() {
    ========================================================================== */
 let activeProject = null;
 let terminalInterval = null;
+let isCompiling = false;
 
 function initIDESandbox() {
     const fileList = document.getElementById("ide-file-list");
@@ -405,6 +406,12 @@ function loadProjectToIDE(projectId) {
     const feedImg = document.getElementById("feed-image");
     const feedFallback = document.getElementById("feed-fallback");
     
+    // Reset compile state if they switch modules mid-compile
+    if (terminalInterval) {
+        clearInterval(terminalInterval);
+        isCompiling = false;
+    }
+    
     // Pause any existing videos
     feedVideo.pause();
     feedVideo.src = "";
@@ -434,6 +441,19 @@ function loadProjectToIDE(projectId) {
 function executeSystemCode() {
     if (!activeProject) return;
     
+    // Enforce rate limit / double-click protection
+    if (isCompiling) {
+        appendTerminalLine("[System] WARNING: Compilation queue locked. Awaiting completion of current execution...", "error");
+        return;
+    }
+    
+    isCompiling = true;
+    const btnRunCode = document.getElementById("btn-run-code");
+    if (btnRunCode) {
+        btnRunCode.style.opacity = "0.5";
+        btnRunCode.style.pointerEvents = "none";
+    }
+    
     const consoleBox = document.getElementById("terminal-output");
     
     // Prevent overlapping execution timeouts
@@ -457,6 +477,11 @@ function executeSystemCode() {
             step++;
         } else {
             clearInterval(terminalInterval);
+            isCompiling = false;
+            if (btnRunCode) {
+                btnRunCode.style.opacity = "1";
+                btnRunCode.style.pointerEvents = "auto";
+            }
             appendTerminalLine(`[Success] Execution of ${activeProject.file} terminated cleanly. Status: ONLINE.`, "success");
             
             // Add a pulse glow to the telemetry viewport to indicate it is running
@@ -594,6 +619,21 @@ function initContactForm() {
     form.addEventListener("submit", (e) => {
         e.preventDefault();
         
+        // Rate Limit Check (60 seconds cooldown)
+        const lastSubmit = localStorage.getItem("portfolio_contact_rate_limit");
+        const cooldown = 60; // seconds
+        if (lastSubmit) {
+            const timePassed = Math.floor((Date.now() - parseInt(lastSubmit)) / 1000);
+            if (timePassed < cooldown) {
+                logBox.innerHTML = "";
+                const limitLine = document.createElement("div");
+                limitLine.className = "contact-log-line error";
+                limitLine.innerText = `> ERROR: Rate limit active. Cooldown remaining: ${cooldown - timePassed}s. Please wait before transmitting another data packet.`;
+                logBox.appendChild(limitLine);
+                return;
+            }
+        }
+        
         const name = document.getElementById("form-name").value;
         const email = document.getElementById("form-email").value;
         const msg = document.getElementById("form-message").value;
@@ -604,27 +644,60 @@ function initContactForm() {
         
         const steps = [
             `> Initializing mail exchange socket... [OK]`,
-            `> Performing verification handshake for ${name}... [OK]`,
-            `> Structuring transmission headers (sender: ${email})... [OK]`,
-            `> Compressing data buffer... [OK]`,
-            `> Transferring data packets... 100%`,
-            `> Success! Message delivered to Ariel secure mailbox.`
+            `> Performing verification handshake... [OK]`,
+            `> Encrypting and compressing payload packet... [OK]`,
+            `> Forwarding telemetry packet to osamakhassawneh23@gmail.com... [PENDING]`
         ];
         
         let i = 0;
-        const transmissionInterval = setInterval(() => {
+        const printInterval = setInterval(() => {
             if (i < steps.length) {
                 const line = document.createElement("div");
-                line.style.color = i === steps.length - 1 ? "var(--color-green)" : "var(--text-secondary)";
+                line.className = "contact-log-line";
                 line.innerText = steps[i];
                 logBox.appendChild(line);
                 i++;
             } else {
-                clearInterval(transmissionInterval);
-                form.reset();
-                form.style.pointerEvents = "auto";
-                form.style.opacity = 1;
+                clearInterval(printInterval);
+                
+                // Perform real POST transmission to FormSubmit AJAX
+                fetch("https://formsubmit.co/ajax/osamakhassawneh23@gmail.com", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({
+                        Name: name,
+                        Email: email,
+                        Message: msg
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Initialize rate limit timestamp
+                        localStorage.setItem("portfolio_contact_rate_limit", Date.now().toString());
+                        
+                        const successLine = document.createElement("div");
+                        successLine.className = "contact-log-line success";
+                        successLine.innerText = `> SUCCESS: SMTP payload delivered. Telemetry packet logged in inbox.`;
+                        logBox.appendChild(successLine);
+                        form.reset();
+                    } else {
+                        throw new Error(`Server returned code: ${response.status}`);
+                    }
+                })
+                .catch(error => {
+                    const errLine = document.createElement("div");
+                    errLine.className = "contact-log-line error";
+                    errLine.innerText = `> ERROR: Transmission failed. ${error.message}. Try again.`;
+                    logBox.appendChild(errLine);
+                })
+                .finally(() => {
+                    form.style.pointerEvents = "auto";
+                    form.style.opacity = 1;
+                });
             }
-        }, 500);
+        }, 300);
     });
 }

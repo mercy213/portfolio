@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom Style Sheet -->
-    <link rel="stylesheet" href="style.css?v=1.0.9">
+    <link rel="stylesheet" href="style.css?v=1.1.0">
 </head>
 <body>
 
@@ -252,25 +252,31 @@
                     <span class="terminal-title">INITIALIZE_COMMUNICATION.EXE</span>
                 </div>
                 <div class="contact-body">
-                    <p class="prompt-line">> SYSTEM: Choose transmission channel to initialize communication socket...</p>
+                    <p class="prompt-line">> SYSTEM: Initialize secure connection to forward telemetry to osamakhassawneh23@gmail.com...</p>
                     
-                    <div class="cli-shortcuts">
-                        <a href="https://discord.com/users/1277963474731012096" target="_blank" class="cli-link-btn">
-                            <span class="cli-cmd">[1] discord_redirect</span>
-                            <span class="cli-desc">// Connect to Discord ID: 1277963474731012096</span>
-                            <i class="fa-brands fa-discord"></i>
-                        </a>
-                        <a href="https://www.roblox.com/users/311955881/profile" target="_blank" class="cli-link-btn">
-                            <span class="cli-cmd">[2] roblox_profile</span>
-                            <span class="cli-desc">// View active creations & catalog</span>
-                            <i class="fa-solid fa-gamepad"></i>
-                        </a>
-                        <a href="mailto:ariel@example.com" class="cli-link-btn">
-                            <span class="cli-cmd">[3] raw_email_telemetry</span>
-                            <span class="cli-desc">// Send SMTP data packet direct</span>
-                            <i class="fa-solid fa-envelope"></i>
-                        </a>
-                    </div>
+                    <form id="contact-form" class="cli-form">
+                        <div class="form-row">
+                            <label for="form-name" class="cli-label">NAME:</label>
+                            <input type="text" id="form-name" class="cli-input" placeholder="e.g. G-Man" required>
+                        </div>
+                        <div class="form-row">
+                            <label for="form-email" class="cli-label">EMAIL:</label>
+                            <input type="email" id="form-email" class="cli-input" placeholder="e.g. observer@blackmesa.org" required>
+                        </div>
+                        <div class="form-row">
+                            <label for="form-message" class="cli-label">MESSAGE:</label>
+                            <textarea id="form-message" class="cli-input" rows="3" placeholder="Type your message description here..." required></textarea>
+                        </div>
+                        <div class="contact-actions">
+                            <button type="submit" class="btn btn-submit" id="btn-submit-contact">
+                                TRANSMIT_DATA.SH <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                            <a href="https://discord.com/users/1277963474731012096" target="_blank" class="btn btn-secondary btn-discord-contact">
+                                <i class="fa-brands fa-discord"></i> Discord ID
+                            </a>
+                        </div>
+                    </form>
+                    <div class="contact-logs" id="contact-form-logs"></div>
                 </div>
             </div>
         </section>
@@ -288,7 +294,7 @@
     </footer>
 
     <!-- Dependency Scripts -->
-    <script src="data.js?v=1.0.9"></script>
-    <script src="app.js?v=1.0.9"></script>
+    <script src="data.js?v=1.1.0"></script>
+    <script src="app.js?v=1.1.0"></script>
 </body>
 </html>
