@@ -318,15 +318,31 @@ function renderSystemCards() {
                 // Unmute the video on fullscreen entry for a rich showcase experience
                 videoEl.muted = false;
                 
-                if (videoEl.requestFullscreen) {
-                    videoEl.requestFullscreen();
-                } else if (videoEl.webkitEnterFullscreen) {
-                    videoEl.webkitEnterFullscreen(); // iOS Safari specific
-                } else if (videoEl.msRequestFullscreen) {
-                    videoEl.msRequestFullscreen();
+                // Play synchronously to satisfy mobile user-gesture rules
+                const playPromise = videoEl.play();
+                
+                const launchFullscreen = () => {
+                    if (videoEl.requestFullscreen) {
+                        videoEl.requestFullscreen();
+                    } else if (videoEl.webkitEnterFullscreen) {
+                        videoEl.webkitEnterFullscreen(); // iOS Safari specific
+                    } else if (videoEl.webkitRequestFullscreen) {
+                        videoEl.webkitRequestFullscreen();
+                    } else if (videoEl.msRequestFullscreen) {
+                        videoEl.msRequestFullscreen();
+                    }
+                };
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        launchFullscreen();
+                    }).catch(() => {
+                        launchFullscreen();
+                    });
+                } else {
+                    launchFullscreen();
                 }
                 
-                videoEl.play().catch(() => {});
                 mediaContainer.classList.add("playing");
             });
             
@@ -338,6 +354,11 @@ function renderSystemCards() {
             };
             document.addEventListener("fullscreenchange", onFullscreenChange);
             document.addEventListener("webkitfullscreenchange", onFullscreenChange);
+            
+            // iOS specific event for exiting fullscreen
+            videoEl.addEventListener("webkitendfullscreen", () => {
+                videoEl.muted = true;
+            });
         }
     });
 
