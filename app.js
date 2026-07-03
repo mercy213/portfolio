@@ -281,7 +281,7 @@ function renderSystemCards() {
             const mediaContainer = card.querySelector(".card-media");
             
             const startVideo = () => {
-                if (!videoEl.src) {
+                if (!videoEl.getAttribute("src")) {
                     videoEl.src = videoEl.getAttribute("data-src");
                     videoEl.load();
                 }
@@ -301,7 +301,7 @@ function renderSystemCards() {
             // Mobile tap-to-play toggle (swipes/scrolls do not trigger clicks, preventing network choke)
             mediaContainer.addEventListener("click", (e) => {
                 e.stopPropagation();
-                if (!videoEl.src) {
+                if (!videoEl.getAttribute("src")) {
                     videoEl.src = videoEl.getAttribute("data-src");
                     videoEl.load();
                 }
