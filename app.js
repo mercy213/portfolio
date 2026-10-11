@@ -26,12 +26,16 @@ function renderProjects(grid, projects) {
     media.className = "project-media";
     media.dataset.tone = String(index % 5);
 
-    if (project.image) {
-      const poster = document.createElement("img");
+    const posterPath = project.poster || project.image;
+    let poster = null;
+    if (posterPath) {
+      poster = document.createElement("img");
       poster.className = "project-poster";
-      poster.src = project.image;
+      poster.src = posterPath;
       poster.alt = `${project.title} preview`;
       poster.loading = "lazy";
+      poster.decoding = "async";
+      poster.addEventListener("error", () => { poster.hidden = true; });
       media.append(poster);
     }
 
@@ -40,7 +44,7 @@ function renderProjects(grid, projects) {
     video.preload = "none";
     video.playsInline = true;
     video.setAttribute("aria-label", `${project.title} project video`);
-    if (project.image) video.poster = project.image;
+    if (posterPath) video.poster = posterPath;
 
     const playButton = document.createElement("button");
     playButton.className = "media-play";
@@ -60,7 +64,7 @@ function renderProjects(grid, projects) {
 
     const caption = document.createElement("span");
     caption.className = "media-caption";
-    caption.textContent = "PROJECT FILM";
+    caption.textContent = "ROBLOX STUDIO";
 
     media.append(video, playButton, fallback, caption);
 
@@ -88,9 +92,14 @@ function renderProjects(grid, projects) {
       const alternate = document.createElement("button");
       alternate.className = "alternate-video";
       alternate.type = "button";
-      alternate.textContent = "Play another clip ↗";
+      alternate.textContent = "Play alternate clip ↗";
       alternate.addEventListener("click", () => {
         directLink.href = project.alternateVideo;
+        const altPoster = project.alternatePoster || posterPath;
+        if (altPoster) {
+          video.poster = altPoster;
+          if (poster) poster.src = altPoster;
+        }
         loadAndPlay(project.alternateVideo, video, media, playButton);
       });
       details.append(alternate);
@@ -101,6 +110,10 @@ function renderProjects(grid, projects) {
 
     playButton.addEventListener("click", () => {
       directLink.href = project.video;
+      if (posterPath) {
+        video.poster = posterPath;
+        if (poster) poster.src = posterPath;
+      }
       loadAndPlay(project.video, video, media, playButton);
     });
 
@@ -200,7 +213,10 @@ function setupMenu() {
 
   nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeMenu();
+    if (event.key === "Escape" && nav.classList.contains("is-open")) {
+      closeMenu();
+      toggle.focus();
+    }
   });
 }
 
