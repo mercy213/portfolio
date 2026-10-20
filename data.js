@@ -97,27 +97,31 @@ const PORTFOLIO_DATA = [
     title: "Lightning swords",
     category: "gameplay",
     label: "Combat",
-    video: "./Asessts/Abilities/lightning-swords.mp4"
+    video: "./Asessts/Abilities/lightning-swords.mp4",
+    poster: "./Asessts/posters/lightning-swords.jpg"
   },
   {
     id: "fireballs",
     title: "Fireballs",
     category: "gameplay",
     label: "Abilities",
-    video: "./Asessts/Abilities/fireballs.mp4"
+    video: "./Asessts/Abilities/fireballs.mp4",
+    poster: "./Asessts/posters/fireballs.jpg"
   },
   {
     id: "ice-class",
     title: "Ice class",
     category: "gameplay",
     label: "Class",
-    video: "./Asessts/Abilities/ice-class.mp4"
+    video: "./Asessts/Abilities/ice-class.mp4",
+    poster: "./Asessts/posters/ice-class.jpg"
   },
   {
     id: "lightning-class",
     title: "Lightning class",
     category: "gameplay",
     label: "Class",
-    video: "./Asessts/Abilities/lightning-class.mp4"
+    video: "./Asessts/Abilities/lightning-class.mp4",
+    poster: "./Asessts/posters/lightning-class.jpg"
   }
 ];
