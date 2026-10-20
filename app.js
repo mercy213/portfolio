@@ -83,10 +83,12 @@ function renderProjects(grid, projects) {
 
     const title = document.createElement("h3");
     title.textContent = project.title;
-    const description = document.createElement("p");
-    description.textContent = project.description;
-
-    details.append(meta, title, description);
+    details.append(meta, title);
+    if (project.description) {
+      const description = document.createElement("p");
+      description.textContent = project.description;
+      details.append(description);
+    }
 
     if (project.alternateVideo) {
       const alternate = document.createElement("button");

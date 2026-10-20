@@ -67,25 +67,6 @@ const PORTFOLIO_DATA = [
     poster: "./Asessts/posters/role-selection-coinflip.jpg"
   },
   {
-    id: "plot-service",
-    title: "Plot building & placement",
-    category: "systems",
-    label: "Placement / Server checks",
-    description: "A grid placement service that checks plot bounds and collisions before saving player-built objects.",
-    video: "./Asessts/PlotService/2026-07-03 12-15-30.mp4",
-    poster: "./Asessts/posters/plotservice-2026-07-03-12-15-30.jpg"
-  },
-  {
-    id: "data-stores",
-    title: "Player data & autosave",
-    category: "systems",
-    label: "Data / Persistence",
-    description: "A profile persistence setup with session locks, retries, and periodic saves to reduce lost or duplicated data.",
-    video: "./Asessts/DataStores/2026-07-03 12-19-51.mp4",
-    poster: "./Asessts/posters/datastores-2026-07-03-12-19-51.jpg",
-    image: "./Asessts/DataStores/image.png"
-  },
-  {
     id: "matchmaking",
     title: "Matchmaking & teleporting",
     category: "systems",
@@ -93,26 +74,6 @@ const PORTFOLIO_DATA = [
     description: "A queue and teleport flow that groups players and moves them into a reserved game session.",
     video: "./Asessts/MatchMaking/2026-07-03 12-09-17.mp4",
     poster: "./Asessts/posters/matchmaking-2026-07-03-12-09-17.jpg"
-  },
-  {
-    id: "inventory",
-    title: "Inventory system",
-    category: "systems",
-    label: "Inventory / Replication",
-    description: "A server-owned inventory with stack limits, equipment slots, and updates sent back to the player’s interface.",
-    video: "./Asessts/Inventory/2026-07-03 12-16-48.mp4",
-    poster: "./Asessts/posters/inventory-2026-07-03-12-16-48.jpg",
-    alternateVideo: "./Asessts/Inventory/2026-07-03 12-21-57.mp4",
-    alternatePoster: "./Asessts/posters/inventory-2026-07-03-12-21-57.jpg"
-  },
-  {
-    id: "dev-products",
-    title: "Developer product receipts",
-    category: "systems",
-    label: "Transactions / Data",
-    description: "A purchase receipt handler that checks previous transactions before awarding an in-game product.",
-    video: "./Asessts/DevProducts/2026-07-03 12-17-15.mp4",
-    poster: "./Asessts/posters/devproducts-2026-07-03-12-17-15.jpg"
   },
   {
     id: "car-customisation",
@@ -141,5 +102,33 @@ const PORTFOLIO_DATA = [
     description: "A spatial sound effect setup with randomized pitch, distance falloff, and cleanup after playback.",
     video: "./Asessts/bloxFruit Sound F/2026-07-03 11-59-30.mp4",
     poster: "./Asessts/posters/bloxfruit-sound-f-2026-07-03-11-59-30.jpg"
+  },
+  {
+    id: "lightning-swords",
+    title: "Lightning swords",
+    category: "gameplay",
+    label: "Combat",
+    video: "./Asessts/Abilities/lightning-swords.mp4"
+  },
+  {
+    id: "fireballs",
+    title: "Fireballs",
+    category: "gameplay",
+    label: "Abilities",
+    video: "./Asessts/Abilities/fireballs.mp4"
+  },
+  {
+    id: "ice-class",
+    title: "Ice class",
+    category: "gameplay",
+    label: "Class",
+    video: "./Asessts/Abilities/ice-class.mp4"
+  },
+  {
+    id: "lightning-class",
+    title: "Lightning class",
+    category: "gameplay",
+    label: "Class",
+    video: "./Asessts/Abilities/lightning-class.mp4"
   }
 ];
